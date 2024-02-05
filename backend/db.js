@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 let MONGODB_CONNECT_URI;
 if (process.env.NODE_ENV == "production") {
-  const MONGODB_CONNECT_URI = process.env.MONGODB_CONNECT_URI;
+  MONGODB_CONNECT_URI = process.env.MONGODB_CONNECT_URI;
   console.log("in production mode");
 } else {
   MONGODB_CONNECT_URI = require("./config");
