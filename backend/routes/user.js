@@ -5,11 +5,16 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 const { User, Account } = require("../db");
-if (process.env.NODE_ENV == "production") {
-  const JWT_SECRET = process.env.JWT_SECRET;
+
+let JWT_SECRET;
+if (process.env.NODE_ENV === "production") {
+  JWT_SECRET = process.env.JWT_SECRET;
+  console.log("In production mode");
 } else {
-  const { JWT_SECRET } = require("../config");
+  JWT_SECRET = require("../config").JWT_SECRET;
+  console.log("In dev mode");
 }
+
 const { authMiddleware } = require("../middleware");
 
 const signupSchema = zod.object({
@@ -64,6 +69,7 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/signin", async (req, res) => {
+  console.log(JWT_SECRET);
   try {
     const user = await User.findOne({
       username: req.body.username,
@@ -107,7 +113,7 @@ router.put("/", authMiddleware, async (req, res) => {
   });
 });
 
-router.get("/bulk", async (req, res) => {
+router.get("/bulk", authMiddleware, async (req, res) => {
   const filter = req.query.filter || "";
 
   const users = await User.find({

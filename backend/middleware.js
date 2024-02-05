@@ -1,9 +1,12 @@
 const jwt = require("jsonwebtoken");
 
-if (process.env.NODE_ENV == "production") {
-  const JWT_SECRET = process.env.JWT_SECRET;
+let JWT_SECRET;
+if (process.env.NODE_ENV === "production") {
+  JWT_SECRET = process.env.JWT_SECRET;
+  console.log("In production mode");
 } else {
-  const { JWT_SECRET } = require("./config");
+  JWT_SECRET = require("./config").JWT_SECRET;
+  console.log("In dev mode");
 }
 
 const authMiddleware = (req, res, next) => {
