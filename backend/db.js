@@ -3,8 +3,9 @@ const { MONGODB_CONNECT_URI } = require("./config");
 
 if (process.env.NODE_ENV == "production") {
   const MONGODB_CONNECT_URI = process.env.MONGODB_CONNECT_URI;
+  console.log("in production mode");
 } else {
-  const { MONGODB_CONNECT_URI } = require("../config");
+  const { MONGODB_CONNECT_URI } = require("./config");
 }
 
 mongoose.connect(MONGODB_CONNECT_URI);
