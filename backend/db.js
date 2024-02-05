@@ -1,8 +1,13 @@
 const mongoose = require("mongoose");
+const { MONGODB_CONNECT_URI } = require("./config");
 
-mongoose.connect(
-  "mongodb+srv://sharmaketan940:6j1ZG4XUeXqhaWdW@cluster0.hejlvrx.mongodb.net/paytm"
-);
+if (process.env.NODE_ENV == "production") {
+  const MONGODB_CONNECT_URI = process.env.MONGODB_CONNECT_URI;
+} else {
+  const { MONGODB_CONNECT_URI } = require("../config");
+}
+
+mongoose.connect(MONGODB_CONNECT_URI);
 
 const userSchema = new mongoose.Schema({
   username: {

@@ -1,5 +1,10 @@
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("./config");
+
+if (process.env.NODE_ENV == "production") {
+  const JWT_SECRET = process.env.JWT_SECRET;
+} else {
+  const { JWT_SECRET } = require("./config");
+}
 
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
