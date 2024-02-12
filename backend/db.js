@@ -5,7 +5,7 @@ if (process.env.NODE_ENV == "production") {
   MONGODB_CONNECT_URI = process.env.MONGODB_CONNECT_URI;
   console.log("in production mode");
 } else {
-  MONGODB_CONNECT_URI = require("./config");
+  MONGODB_CONNECT_URI = require("./config").MONGODB_CONNECT_URI;
   console.log("in dev mode");
 }
 

@@ -33,6 +33,8 @@ const userUpdateSchema = zod.object({
 router.post("/signup", async (req, res) => {
   const parsedPayload = signupSchema.safeParse(req.body);
 
+  console.log(req.body);
+
   if (!parsedPayload.success) {
     return res.json({
       message: "Incorrect inputs",
@@ -69,7 +71,6 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/signin", async (req, res) => {
-  console.log(JWT_SECRET);
   try {
     const user = await User.findOne({
       username: req.body.username,
@@ -86,6 +87,7 @@ router.post("/signin", async (req, res) => {
 
       return res.json({
         token: token,
+        userId: user._id,
       });
     }
 
@@ -96,7 +98,7 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-router.put("/", authMiddleware, async (req, res) => {
+router.put("/edit", authMiddleware, async (req, res) => {
   const parsedPayload = userUpdateSchema.safeParse(req.body);
   if (!parsedPayload.success) {
     res.status(411).json({
@@ -125,9 +127,17 @@ router.get("/bulk", async (req, res) => {
         lastName: { $regex: new RegExp(filter, "i") },
       },
     ],
-  }).select("_id firstName lastName");
+  }).select("_id firstName lastName username");
 
   return res.json(users);
+});
+
+router.get("/:userId", async (req, res) => {
+  const user = await User.findOne({
+    _id: req.params.userId,
+  }).select("_id firstName lastName username");
+
+  return res.json(user);
 });
 
 module.exports = router;

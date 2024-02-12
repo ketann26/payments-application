@@ -9,7 +9,7 @@ const { default: mongoose } = require("mongoose");
 router.get("/balance", authMiddleware, async (req, res) => {
   const account = await Account.findOne({ userId: req.userId });
 
-  return res.json({ balance: parseFloat(account.balance.toString()) });
+  return res.json({ balance: parseInt(account.balance.toString()) });
 });
 
 router.post("/transfer", authMiddleware, async (req, res) => {
@@ -23,8 +23,6 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     userId: req.userId,
   }).session(session);
 
-  console.log(senderAccount.balance);
-
   if (senderAccount.balance < amount) {
     session.abortTransaction();
     return res.status(400).json({ message: "Insufficient balance" });
@@ -33,8 +31,6 @@ router.post("/transfer", authMiddleware, async (req, res) => {
   const recieverAccount = await Account.findOne({
     userId: to,
   }).session(session);
-
-  console.log(recieverAccount.balance);
 
   if (!recieverAccount) {
     session.abortTransaction();
